@@ -173,34 +173,49 @@ public class SemanticVersion
         switch (element)
         {
             case MAJOR:
-                if (special == null || this.minor != 0 || this.patch != 0)
-                {
-                    return new SemanticVersion(this.major + 1, 0, 0);
-                }
-                else
-                {
-                    return new SemanticVersion(this.major, 0, 0);
-                }
+                return createMajorSemanticVersion();
             case MINOR:
-                if (special == null || this.patch != 0)
-                {
-                    return new SemanticVersion(this.major, this.minor + 1, 0);
-                }
-                else
-                {
-                    return new SemanticVersion(this.major, this.minor, 0);
-                }
+                return createMinorSemanticVersion();
             case PATCH:
-                if (special == null)
-                {
-                    return new SemanticVersion(this.major, this.minor, this.patch + 1);
-                }
-                else
-                {
-                    return new SemanticVersion(this.major, this.minor, this.patch);
-                }
+                return createPatchSemanticVersion();
             default:
                 throw new IllegalArgumentException("Unknown element <" + element + ">");
+        }
+    }
+
+    private SemanticVersion createMajorSemanticVersion()
+    {
+        if (special == null || this.minor != 0 || this.patch != 0)
+        {
+            return new SemanticVersion(this.major + 1, 0, 0);
+        }
+        else
+        {
+            return new SemanticVersion(this.major, 0, 0);
+        }
+    }
+
+    private SemanticVersion createMinorSemanticVersion()
+    {
+        if (special == null || this.patch != 0)
+        {
+            return new SemanticVersion(this.major, this.minor + 1, 0);
+        }
+        else
+        {
+            return new SemanticVersion(this.major, this.minor, 0);
+        }
+    }
+
+    private SemanticVersion createPatchSemanticVersion()
+    {
+        if (special == null)
+        {
+            return new SemanticVersion(this.major, this.minor, this.patch + 1);
+        }
+        else
+        {
+            return new SemanticVersion(this.major, this.minor, this.patch);
         }
     }
 
@@ -452,16 +467,12 @@ public class SemanticVersion
             {
                 return true;
             }
-            if (obj == null)
-            {
-                return false;
-            }
-            if (getClass() != obj.getClass())
+            if (obj == null || getClass() != obj.getClass())
             {
                 return false;
             }
             IntId other = (IntId) obj;
-            if (id != other.id)
+            if (id != (IntId) obj.id)
             {
                 return false;
             }
@@ -546,18 +557,7 @@ public class SemanticVersion
                 return true;
             }
 
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (getClass() != obj.getClass())
-            {
-                return false;
-            }
-
-            Special other = (Special) obj;
-            if (!Arrays.equals(ids, other.ids))
+            if (obj == null || getClass() != obj.getClass() || !Arrays.equals(ids, ((Special) obj).ids))
             {
                 return false;
             }
@@ -592,40 +592,46 @@ public class SemanticVersion
             return 0;
         }
 
-        if (this.major < other.major)
+        if (versionLessThan(other))
         {
             return -1;
         }
-        else if (this.major == other.major)
+        else if (versionEqual(other))
         {
-            if (this.minor < other.minor)
+            if (this.special != null && other.special != null)
+            {
+                return this.special.compareTo(other.special);
+            }
+            else if (other.special != null)
+            {
+                return 1;
+            }
+            else if (this.special != null)
             {
                 return -1;
-            }
-            else if (this.minor == other.minor)
-            {
-                if (this.patch < other.patch)
-                {
-                    return -1;
-                }
-                else if (this.patch == other.patch)
-                {
-                    if (this.special != null && other.special != null)
-                    {
-                        return this.special.compareTo(other.special);
-                    }
-                    else if (other.special != null)
-                    {
-                        return 1;
-                    }
-                    else if (this.special != null)
-                    {
-                        return -1;
-                    } // else handled by previous equals check
-                }
-            }
+            } // else handled by previous equals check
         }
         return 1; //if this (major, minor or patch) is > than other
+    }
+
+    private boolean versionEqual(final SemanticVersion other)
+    {
+        if(this.major == other.major && this.minor == other.minor && this.patch == other.patch)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean versionLessThan(final SemanticVersion other)
+    {
+        if(this.major < other.major
+                || (this.major == other.major && (this.minor < other.minor
+                || (this.minor == other.minor && this.patch < other.patch))))
+        {
+            return true;
+        }
+        return false;
     }
 
     @Override
