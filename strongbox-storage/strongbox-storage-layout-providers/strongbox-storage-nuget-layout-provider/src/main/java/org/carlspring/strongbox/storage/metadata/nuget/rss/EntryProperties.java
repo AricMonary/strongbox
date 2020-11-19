@@ -62,7 +62,7 @@ public class EntryProperties
 {
 
     public static EntryProperties parse(InputStream inputStream)
-        throws JAXBException
+            throws JAXBException
     {
         JAXBContext context = JAXBContext.newInstance(EntryProperties.class);
         Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -239,254 +239,7 @@ public class EntryProperties
      */
     private String bugTrackerUrl;
 
-    /**
-     * Creates an XML element of Microsoft DataTable format from version
-     *
-     * @param name
-     *            the name of the XML element
-     * @param nullable
-     *            whether the element can be NULL
-     * @param value
-     *            element value
-     * @return XML element
-     * @throws ParserConfigurationException
-     */
-    private Element createMicrosoftElement(String name,
-                                           boolean nullable,
-                                           SemanticVersion value)
-        throws ParserConfigurationException
-    {
-        String stringValue = value == null ? null : value.toString();
-        return createMicrosoftElement(name, nullable, MicrosoftTypes.String, stringValue);
-    }
 
-    /**
-     * Creates a Microsoft DataTable XML format element from a string
-     *
-     * @param name
-     *            the name of the XML element
-     * @param nullable
-     *            whether the element can be NULL
-     * @param value
-     *            element value
-     * @return XML element
-     * @throws ParserConfigurationException
-     */
-    private Element createMicrosoftElement(String name,
-                                           boolean nullable,
-                                           String value)
-        throws ParserConfigurationException
-    {
-        return createMicrosoftElement(name, nullable, MicrosoftTypes.String, value);
-    }
-
-    /**
-     * Creates an XML element of the Microsoft DataTable format from an integer
-     *
-     * @param name
-     *            the name of the XML element
-     * @param nullable
-     *            whether the element can be NULL
-     * @param value
-     *            element value
-     * @return XML element
-     * @throws ParserConfigurationException
-     */
-    private Element createMicrosoftElement(String name,
-                                           boolean nullable,
-                                           Integer value)
-        throws ParserConfigurationException
-    {
-        String stringValue = value == null ? null : value.toString();
-        return createMicrosoftElement(name, nullable, MicrosoftTypes.Int32, stringValue);
-    }
-
-    /**
-     * Creates an XML element of Microsoft DataTable format from long
-     *
-     * @param name
-     *            the name of the XML element
-     * @param nullable
-     *            whether the element can be NULL
-     * @param value
-     *            element value
-     * @return XML element
-     * @throws ParserConfigurationException
-     */
-    private Element createMicrosoftElement(String name,
-                                           boolean nullable,
-                                           Long value)
-        throws ParserConfigurationException
-    {
-        String stringValue = value == null ? null : value.toString();
-        return createMicrosoftElement(name, nullable, MicrosoftTypes.Int64, stringValue);
-    }
-
-    /**
-     * Creates an XML element of the Microsoft DataTable format from a floating
-     * point number
-     *
-     * @param name
-     *            the name of the XML element
-     * @param nullable
-     *            whether the element can be NULL
-     * @param value
-     *            element value
-     * @return XML element
-     * @throws ParserConfigurationException
-     */
-    private Element createMicrosoftElement(String name,
-                                           boolean nullable,
-                                           Double value)
-        throws ParserConfigurationException
-    {
-        String stringValue = value == null ? null : value.toString();
-        return createMicrosoftElement(name, nullable, MicrosoftTypes.Double, stringValue);
-    }
-
-    /**
-     * Creates a Microsoft DataTable XML format element from boolean
-     *
-     * @param name
-     *            the name of the XML element
-     * @param nullable
-     *            whether the element can be NULL
-     * @param value
-     *            element value
-     * @return XML element
-     * @throws ParserConfigurationException
-     */
-    private Element createMicrosoftElement(String name,
-                                           boolean nullable,
-                                           Boolean value)
-        throws ParserConfigurationException
-    {
-        String stringValue = value == null ? null : value.toString();
-        return createMicrosoftElement(name, nullable, MicrosoftTypes.Boolean, stringValue);
-    }
-
-    /**
-     * Creates a Microsoft DataTable XML format element from date / time
-     *
-     * @param name
-     *            the name of the XML element
-     * @param nullable
-     *            whether the element can be NULL
-     * @param value
-     *            element value
-     * @return XML element
-     * @throws ParserConfigurationException
-     */
-    private Element createMicrosoftElement(String name,
-                                           boolean nullable,
-                                           Date value)
-        throws ParserConfigurationException
-    {
-        String stringValue = null;
-        if (value != null)
-        {
-            try
-            {
-                GregorianCalendar calendar = new GregorianCalendar();
-                calendar.setTime(value);
-                XMLGregorianCalendar xmlgc = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
-                stringValue = xmlgc.toXMLFormat();
-            }
-            catch (DatatypeConfigurationException ex)
-            {
-                throw new ParserConfigurationException("Failed to convert date to XML");
-            }
-        }
-        return createMicrosoftElement(name, nullable, MicrosoftTypes.DateTime, stringValue);
-    }
-
-    /**
-     * Creates a Microsoft DataTable XML format element from a list of strings
-     *
-     * @param name
-     *            the name of the XML element
-     * @param nullable
-     *            whether the element can be NULL
-     * @param value
-     *            element value
-     * @return XML element
-     * @throws ParserConfigurationException
-     */
-    private Element createMicrosoftElement(String name,
-                                           boolean nullable,
-                                           List<String> value)
-        throws ParserConfigurationException
-    {
-        String stringValue = null;
-        if (value != null)
-        {
-            try
-            {
-                StringListTypeAdapter adapter = new StringListTypeAdapter();
-                stringValue = adapter.marshal(value);
-            }
-            catch (Exception e)
-            {
-                throw new ParserConfigurationException("Error converting string list");
-            }
-        }
-        Element element = createMicrosoftElement(name, nullable, MicrosoftTypes.DateTime, stringValue);
-        element.setAttributeNS(XMLConstants.XML_NS_URI, "space", "preserve");
-        return element;
-    }
-
-    /**
-     * Creates a Microsoft DataTable XML format element from a string
-     *
-     * @param name
-     *            the name of the XML element
-     * @param nullable
-     *            whether the element can be NULL
-     * @param type
-     *            element type by Microsoft version
-     * @param value
-     *            element value
-     * @return XML element
-     * @throws ParserConfigurationException
-     */
-    private Element createMicrosoftElement(String name,
-                                           boolean nullable,
-                                           MicrosoftTypes type,
-                                           String value)
-        throws ParserConfigurationException
-    {
-        Document document = createDocument();
-        Element element = document.createElementNS("http://schemas.microsoft.com/ado/2007/08/dataservices", name);
-        if (nullable && Strings.isNullOrEmpty(value))
-        {
-            element.setAttributeNS("http://schemas.microsoft.com/ado/2007/08/dataservices/metadata", "null", "true");
-        }
-        if (type != MicrosoftTypes.String)
-        {
-            element.setAttributeNS("http://schemas.microsoft.com/ado/2007/08/dataservices/metadata", "type",
-                                   type.toString());
-        }
-        element.setTextContent(value);
-        document.appendChild(element);
-        document.normalizeDocument();
-        return document.getDocumentElement();
-    }
-
-    /**
-     * Creates an XMl document for further use in conversion
-     *
-     * @return empty XML document
-     * @throws ParserConfigurationException
-     */
-    private Document createDocument()
-        throws ParserConfigurationException
-    {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
-        DocumentBuilder docb = dbf.newDocumentBuilder();
-        Document document = docb.newDocument();
-        return document;
-    }
 
     /**
      * Returns a list of properties serialized to XML.
@@ -496,43 +249,43 @@ public class EntryProperties
      */
     @XmlAnyElement
     public Element[] getProperties()
-        throws ParserConfigurationException
+            throws ParserConfigurationException
     {
         List<Element> elements = new ArrayList<>();
-        elements.add(createMicrosoftElement("Version", false, this.version));
-        elements.add(createMicrosoftElement("Title", true, this.title));
-        elements.add(createMicrosoftElement("IconUrl", true, this.iconUrl));
-        elements.add(createMicrosoftElement("LicenseUrl", true, this.licenseUrl));
-        elements.add(createMicrosoftElement("ProjectUrl", true, this.projectUrl));
-        elements.add(createMicrosoftElement("ProjectSourceUrl", true, this.projectUrl));
-        elements.add(createMicrosoftElement("PackageSourceUrl", true, this.packageSourceUrl));
-        elements.add(createMicrosoftElement("DocsUrl", true, this.docsUrl));
-        elements.add(createMicrosoftElement("MailingListUrl", true, this.mailingListUrl));
-        elements.add(createMicrosoftElement("BugTrackerUrl", true, this.bugTrackerUrl));
-        elements.add(createMicrosoftElement("ReportAbuseUrl", true, this.reportAbuseUrl));
-        elements.add(createMicrosoftElement("DownloadCount", false, this.downloadCount));
-        elements.add(createMicrosoftElement("VersionDownloadCount", false, this.versionDownloadCount));
-        elements.add(createMicrosoftElement("RatingsCount", false, this.ratingsCount));
-        elements.add(createMicrosoftElement("VersionRatingsCount", false, this.versionRatingsCount));
-        elements.add(createMicrosoftElement("Rating", false, this.rating));
-        elements.add(createMicrosoftElement("VersionRating", false, this.versionRating));
-        elements.add(createMicrosoftElement("RequireLicenseAcceptance", false, this.requireLicenseAcceptance));
-        elements.add(createMicrosoftElement("Description", false, this.description));
-        elements.add(createMicrosoftElement("ReleaseNotes", true, this.releaseNotes));
-        elements.add(createMicrosoftElement("Language", true, this.language));
-        elements.add(createMicrosoftElement("Published", false, this.published));
-        elements.add(createMicrosoftElement("Price", false, this.price));
-        elements.add(createMicrosoftElement("Dependencies", false, this.dependencies));
-        elements.add(createMicrosoftElement("PackageHash", false, this.packageHash));
+        elements.add(MicrosoftElement.createMicrosoftElement("Version", false, this.version));
+        elements.add(MicrosoftElement.createMicrosoftElement("Title", true, this.title));
+        elements.add(MicrosoftElement.createMicrosoftElement("IconUrl", true, this.iconUrl));
+        elements.add(MicrosoftElement.createMicrosoftElement("LicenseUrl", true, this.licenseUrl));
+        elements.add(MicrosoftElement.createMicrosoftElement("ProjectUrl", true, this.projectUrl));
+        elements.add(MicrosoftElement.createMicrosoftElement("ProjectSourceUrl", true, this.projectUrl));
+        elements.add(MicrosoftElement.createMicrosoftElement("PackageSourceUrl", true, this.packageSourceUrl));
+        elements.add(MicrosoftElement.createMicrosoftElement("DocsUrl", true, this.docsUrl));
+        elements.add(MicrosoftElement.createMicrosoftElement("MailingListUrl", true, this.mailingListUrl));
+        elements.add(MicrosoftElement.createMicrosoftElement("BugTrackerUrl", true, this.bugTrackerUrl));
+        elements.add(MicrosoftElement.createMicrosoftElement("ReportAbuseUrl", true, this.reportAbuseUrl));
+        elements.add(MicrosoftElement.createMicrosoftElement("DownloadCount", false, this.downloadCount));
+        elements.add(MicrosoftElement.createMicrosoftElement("VersionDownloadCount", false, this.versionDownloadCount));
+        elements.add(MicrosoftElement.createMicrosoftElement("RatingsCount", false, this.ratingsCount));
+        elements.add(MicrosoftElement.createMicrosoftElement("VersionRatingsCount", false, this.versionRatingsCount));
+        elements.add(MicrosoftElement.createMicrosoftElement("Rating", false, this.rating));
+        elements.add(MicrosoftElement.createMicrosoftElement("VersionRating", false, this.versionRating));
+        elements.add(MicrosoftElement.createMicrosoftElement("RequireLicenseAcceptance", false, this.requireLicenseAcceptance));
+        elements.add(MicrosoftElement.createMicrosoftElement("Description", false, this.description));
+        elements.add(MicrosoftElement.createMicrosoftElement("ReleaseNotes", true, this.releaseNotes));
+        elements.add(MicrosoftElement.createMicrosoftElement("Language", true, this.language));
+        elements.add(MicrosoftElement.createMicrosoftElement("Published", false, this.published));
+        elements.add(MicrosoftElement.createMicrosoftElement("Price", false, this.price));
+        elements.add(MicrosoftElement.createMicrosoftElement("Dependencies", false, this.dependencies));
+        elements.add(MicrosoftElement.createMicrosoftElement("PackageHash", false, this.packageHash));
         // TODO <d: PackageHashAlgorithm> SHA512 </ d: PackageHashAlgorithm>
-        elements.add(createMicrosoftElement("PackageSize", false, this.packageSize));
-        elements.add(createMicrosoftElement("ExternalPackageUri", true, this.externalPackageUri));
-        elements.add(createMicrosoftElement("Categories", true, this.categories));
-        elements.add(createMicrosoftElement("Copyright", true, this.copyright));
-        elements.add(createMicrosoftElement("PackageType", true, this.packageType));
-        elements.add(createMicrosoftElement("Tags", true, this.tags));
-        elements.add(createMicrosoftElement("IsLatestVersion", false, this.isLatestVersion));
-        elements.add(createMicrosoftElement("Summary", true, this.summary));
+        elements.add(MicrosoftElement.createMicrosoftElement("PackageSize", false, this.packageSize));
+        elements.add(MicrosoftElement.createMicrosoftElement("ExternalPackageUri", true, this.externalPackageUri));
+        elements.add(MicrosoftElement.createMicrosoftElement("Categories", true, this.categories));
+        elements.add(MicrosoftElement.createMicrosoftElement("Copyright", true, this.copyright));
+        elements.add(MicrosoftElement.createMicrosoftElement("PackageType", true, this.packageType));
+        elements.add(MicrosoftElement.createMicrosoftElement("Tags", true, this.tags));
+        elements.add(MicrosoftElement.createMicrosoftElement("IsLatestVersion", false, this.isLatestVersion));
+        elements.add(MicrosoftElement.createMicrosoftElement("Summary", true, this.summary));
         return elements.toArray(new Element[elements.size()]);
     }
 
@@ -545,7 +298,7 @@ public class EntryProperties
      *             illegal version value
      */
     public void setProperties(Element[] properties)
-        throws NugetFormatException
+            throws NugetFormatException
     {
         Map<String, Element> hashMap = new HashMap<>();
         for (Element element : properties)
@@ -576,7 +329,7 @@ public class EntryProperties
         this.releaseNotes = getTextContent(hashMap, "ReleaseNotes");
         this.language = getTextContent(hashMap, "Language");
         this.published = javax.xml.bind.DatatypeConverter.parseDateTime(hashMap.get("Published").getTextContent())
-                                                         .getTime();
+                .getTime();
         this.price = getDoubleContent(hashMap.get("Price"));
         this.dependencies = getTextContent(hashMap, "Dependencies");
         this.packageHash = getTextContent(hashMap, "PackageHash");
@@ -1022,7 +775,7 @@ public class EntryProperties
      *             version format error
      */
     public List<Dependency> getDependenciesList()
-        throws NugetFormatException
+            throws NugetFormatException
     {
         ArrayList<Dependency> list = new ArrayList<>();
         if (dependencies == null || dependencies.isEmpty())
@@ -1138,9 +891,6 @@ public class EntryProperties
         {
             return "";
         }
-        else
-        {
-            return result.getTextContent();
-        }
+        return result.getTextContent();
     }
 }
