@@ -33,6 +33,10 @@ public enum RepositoryFormConverter
         result.setAllowsDelete(source.isAllowsDelete());
         result.setAllowsDirectoryBrowsing(source.isAllowsDirectoryBrowsing());
         result.setChecksumHeadersEnabled(source.isChecksumHeadersEnabled());
+        return RepositoryCheck(source, result);
+    }
+
+    private RepositoryDto RepositoryCheck(RepositoryForm source, RepositoryDto result) {
         if (source.getRepositoryConfiguration() != null)
         {
             result.setRepositoryConfiguration(
@@ -63,6 +67,7 @@ public enum RepositoryFormConverter
             result.setArtifactCoordinateValidators(source.getArtifactCoordinateValidators());
         }
         result.setBasedir(source.getBasedir());
+
         return result;
     }
 }
