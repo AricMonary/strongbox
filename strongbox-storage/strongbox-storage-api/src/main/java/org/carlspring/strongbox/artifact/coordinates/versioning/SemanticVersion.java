@@ -183,6 +183,13 @@ public class SemanticVersion
         }
     }
 
+    /**
+     *
+     * A check that detects if a change is major and creates a corresponding SemanticVersion object using the major fields
+     *
+     * @param
+     * @return next {@link SemanticVersion}
+     */
     private SemanticVersion createMajorSemanticVersion()
     {
         if (special == null || this.minor != 0 || this.patch != 0)
@@ -195,6 +202,13 @@ public class SemanticVersion
         }
     }
 
+    /**
+     *
+     * A check that detects if a change is major and creates a corresponding SemanticVersion object using the minor fields
+     *
+     * @param
+     * @return next {@link SemanticVersion}
+     */
     private SemanticVersion createMinorSemanticVersion()
     {
         if (special == null || this.patch != 0)
@@ -207,6 +221,13 @@ public class SemanticVersion
         }
     }
 
+    /**
+     *
+     * A check that detects if a change is major and creates a corresponding SemanticVersion object using the patch fields
+     *
+     * @param
+     * @return next {@link SemanticVersion}
+     */
     private SemanticVersion createPatchSemanticVersion()
     {
         if (special == null)

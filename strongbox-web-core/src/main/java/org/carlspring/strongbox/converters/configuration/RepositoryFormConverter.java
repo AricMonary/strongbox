@@ -14,6 +14,14 @@ public enum RepositoryFormConverter
 {
     INSTANCE;
 
+
+    /**
+     *
+     * Converts RepositoryForm to RepositoryDto
+     *
+     * @param source
+     * @return RepositoryCheck(source, result) {@link RepositoryDto}
+     */
     @Override
     public RepositoryDto convert(final RepositoryForm source)
     {
@@ -36,6 +44,14 @@ public enum RepositoryFormConverter
         return RepositoryCheck(source, result);
     }
 
+    /**
+     *
+     * Makes needed changes to the result if certain information is missing from the source
+     *
+     * @param source
+     * @param result
+     * @return result {@link RepositoryDto}
+     */
     private RepositoryDto RepositoryCheck(RepositoryForm source, RepositoryDto result) {
         if (source.getRepositoryConfiguration() != null)
         {

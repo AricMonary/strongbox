@@ -119,6 +119,14 @@ public abstract class AbstractLayoutProvider<T extends ArtifactCoordinates>
         return result;
     }
 
+    /**
+     *
+     * Creates a object based on the RepositoryFileAttributeType
+     *
+     * @param repositoryPath
+     * @param repositoryFileAttributeType
+     * @return value {@link Object}
+     */
     @org.jetbrains.annotations.Nullable
     private Object getObjectFromAttributeType(RepositoryPath repositoryPath, RepositoryFileAttributeType repositoryFileAttributeType) throws IOException {
         Object value;
